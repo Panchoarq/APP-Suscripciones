@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    button, input { font-family: inherit; }
+    button { cursor: pointer; }
+    input:focus, button:focus { outline: none; }
+    input::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    ::-webkit-scrollbar { width: 0; height: 0; }
+  </style>
+</helmet>
+
+<div style="{{ backdropStyle }}">
+  <div style="{{ phoneStyle }}">
+
+    <div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:relative;background:var(--bg)">
+      <span style="font:600 15px 'Space Grotesk',sans-serif;color:var(--text);letter-spacing:0.2px">9:41</span>
+      <div style="position:absolute;left:50%;top:12px;transform:translateX(-50%);width:10px;height:10px;border-radius:50%;background:#000"></div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div style="display:flex;align-items:flex-end;gap:2px;height:10px">
+          <div style="width:3px;height:4px;border-radius:1px;background:var(--text)"></div>
+          <div style="width:3px;height:6px;border-radius:1px;background:var(--text)"></div>
+          <div style="width:3px;height:8px;border-radius:1px;background:var(--text)"></div>
+          <div style="width:3px;height:10px;border-radius:1px;background:var(--text)"></div>
+        </div>
+        <div style="width:22px;height:11px;border:1.4px solid var(--text);border-radius:3px;position:relative;opacity:0.9">
+          <div style="position:absolute;inset:1.5px;background:var(--text);border-radius:1px;width:70%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="flex:none;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:var(--bg)">
+      <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+        <span style="font:700 21px 'Space Grotesk',sans-serif;color:var(--text);letter-spacing:-0.3px">Suscripciones</span>
+      </sc-if>
+      <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:center;gap:8px">
+          <button onClick="{{ onCycleStyle }}" style="width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;padding:0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M17 2.1l4 4-4 4M3 12.7v-2a4 4 0 014-4h14M7 21.9l-4-4 4-4M21 11.3v2a4 4 0 01-4 4H3" stroke="var(--text)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button onClick="{{ onQuickAddSub }}" style="width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;padding:0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="var(--text)" stroke-width="2.2" stroke-linecap="round"/></svg>
+          </button>
+          <button onClick="{{ toggleTheme }}" style="width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;padding:0">
+            <sc-if value="{{ isDark }}">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z" fill="var(--text)"/></svg>
+            </sc-if>
+            <sc-if value="{{ isLight }}">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.5" fill="var(--text)"/><g stroke="var(--text)" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="1.5" x2="12" y2="4.5"/><line x1="12" y1="19.5" x2="12" y2="22.5"/><line x1="1.5" y1="12" x2="4.5" y2="12"/><line x1="19.5" y1="12" x2="22.5" y2="12"/><line x1="4.4" y1="4.4" x2="6.5" y2="6.5"/><line x1="17.5" y1="17.5" x2="19.6" y2="19.6"/><line x1="4.4" y1="19.6" x2="6.5" y2="17.5"/><line x1="17.5" y1="6.5" x2="19.6" y2="4.4"/></g></svg>
+            </sc-if>
+          </button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ goHome }}" style="width:40px;height:40px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;padding:0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 19L8 12l7-7" stroke="var(--text)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </sc-if>
+      <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+        <span style="font:600 16px 'Manrope',sans-serif;color:var(--text)">Detalle</span>
+      </sc-if>
+      <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}"><div style="width:40px"></div></sc-if>
+
+      <sc-if value="{{ isCategoryDetail }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ goHome }}" style="width:40px;height:40px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;padding:0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 19L8 12l7-7" stroke="var(--text)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </sc-if>
+      <sc-if value="{{ isCategoryDetail }}" hint-placeholder-val="{{ false }}">
+        <span style="font:600 16px 'Manrope',sans-serif;color:var(--text)">{{ categoryDetailTitle }}</span>
+      </sc-if>
+      <sc-if value="{{ isCategoryDetail }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ onCategoryDetailEdit }}" style="width:40px;height:40px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;padding:0">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M16.5 3.5l4 4L7 21H3v-4L16.5 3.5z" stroke="var(--textMuted)" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </button>
+      </sc-if>
+
+      <sc-if value="{{ isEditSub }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ goHome }}" style="width:40px;height:40px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;padding:0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="var(--text)" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </button>
+      </sc-if>
+      <sc-if value="{{ isEditSub }}" hint-placeholder-val="{{ false }}">
+        <span style="font:600 16px 'Manrope',sans-serif;color:var(--text)">{{ editSubTitle }}</span>
+      </sc-if>
+      <sc-if value="{{ isEditSub }}" hint-placeholder-val="{{ false }}"><div style="width:40px"></div></sc-if>
+
+      <sc-if value="{{ isEditCategory }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ goHome }}" style="width:40px;height:40px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;padding:0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="var(--text)" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </button>
+      </sc-if>
+      <sc-if value="{{ isEditCategory }}" hint-placeholder-val="{{ false }}">
+        <span style="font:600 16px 'Manrope',sans-serif;color:var(--text)">{{ editCategoryTitle }}</span>
+      </sc-if>
+      <sc-if value="{{ isEditCategory }}" hint-placeholder-val="{{ false }}"><div style="width:40px"></div></sc-if>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;background:var(--bg);position:relative">
+
+      <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:4px 20px 100px;animation:fadeIn .18s ease">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:20px 22px;margin-bottom:22px">
+            <div style="font:600 12px 'Manrope',sans-serif;color:var(--textMuted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px">Gasto mensual total</div>
+            <div style="font:700 38px/1 'Space Grotesk',sans-serif;color:var(--text);font-variant-numeric:tabular-nums">{{ totalMonthlyFormatted }}</div>
+            <div style="display:flex;gap:14px;margin-top:10px">
+              <span style="font:500 13px 'Manrope',sans-serif;color:var(--textMuted)">{{ totalYearlyFormatted }} al año</span>
+              <span style="font:500 13px 'Manrope',sans-serif;color:var(--accent)">·</span>
+              <span style="font:500 13px 'Manrope',sans-serif;color:var(--textMuted)">{{ subsCountLabel }}</span>
+            </div>
+            <sc-if value="{{ hasUsdSubs }}" hint-placeholder-val="{{ false }}">
+              <div style="font:500 11.5px 'Manrope',sans-serif;color:var(--textMuted);margin-top:10px;opacity:0.8">{{ conversionNote }}</div>
+            </sc-if>
+          </div>
+
+          <sc-if value="{{ isListLayout }}" hint-placeholder-val="{{ true }}">
+          <div>
+          <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="6">
+            <div style="margin-bottom:14px;border:1px solid var(--border);border-radius:20px;background:var(--surface);overflow:hidden;box-shadow:inset 0 1px 1px var(--shadowHi),inset 0 -2px 5px var(--shadowLo),0 1px 2px rgba(0,0,0,0.04)">
+              <div onClick="{{ cat.onToggle }}" style="width:100%;display:flex;align-items:center;gap:13px;padding:15px 16px;background:transparent;text-align:left;cursor:pointer">
+                <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(155deg, color-mix(in srgb, {{ cat.color }} 88%, white) 0%, {{ cat.color }} 60%, color-mix(in srgb, {{ cat.color }} 80%, black) 100%);box-shadow:0 3px 8px -2px color-mix(in srgb, {{ cat.color }} 55%, transparent),inset 0 1px 1px rgba(255,255,255,0.35);display:flex;align-items:center;justify-content:center;flex:none;position:relative;overflow:hidden">
+                  <sc-if value="{{ cat.hasIcon }}">
+                    <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="{{ cat.iconD }}" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </sc-if>
+                  <sc-if value="{{ cat.noIcon }}">
+                    <span style="font:700 13px 'Space Grotesk',sans-serif;color:#fff">{{ cat.mono }}</span>
+                  </sc-if>
+                </div>
+                <div style="flex:1;min-width:0">
+                  <div style="font:600 13.5px 'Manrope',sans-serif;color:var(--textMuted);letter-spacing:0.1px">{{ cat.name }}</div>
+                  <div style="font:700 19px 'Space Grotesk',sans-serif;color:var(--text);font-variant-numeric:tabular-nums;margin-top:2px;letter-spacing:-0.2px">{{ cat.subtotalFormatted }}</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none">
+                  <button onClick="{{ cat.onEdit }}" style="width:28px;height:28px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;padding:0">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M16.5 3.5l4 4L7 21H3v-4L16.5 3.5z" stroke="var(--textMuted)" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                  </button>
+                  <span style="font:600 10.5px 'Manrope',sans-serif;color:var(--textMuted);text-transform:uppercase;letter-spacing:0.5px;background:var(--surface2);padding:3px 8px;border-radius:100px">{{ cat.countLabel }}</span>
+                </div>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="flex:none;transform:{{ cat.chevronTransform }};transition:transform .15s ease;margin-left:2px">
+                  <path d="M6 9l6 6 6-6" stroke="var(--textMuted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+
+              <sc-if value="{{ cat.expanded }}">
+                <div style="border-top:1px solid var(--border)">
+                  <sc-for list="{{ cat.subs }}" as="sub" hint-placeholder-count="2">
+                    <button onClick="{{ sub.onOpen }}" style="width:100%;display:flex;align-items:center;gap:12px;padding:12px 16px;background:transparent;border:none;border-bottom:1px solid var(--border);text-align:left">
+                      <div style="width:34px;height:34px;border-radius:10px;background:{{ sub.logoColor }};display:flex;align-items:center;justify-content:center;flex:none">
+                        <span style="font:700 13px 'Space Grotesk',sans-serif;color:#fff">{{ sub.logoLetter }}</span>
+                      </div>
+                      <div style="flex:1;min-width:0">
+                        <div style="font:600 14.5px 'Manrope',sans-serif;color:var(--text)">{{ sub.name }}</div>
+                        <div style="font:500 12px 'Manrope',sans-serif;color:var(--textMuted);margin-top:1px">Próx. cobro · {{ sub.nextDateFormatted }}</div>
+                      </div>
+                      <div style="text-align:right;flex:none">
+                        <div style="font:600 14px 'Space Grotesk',sans-serif;color:var(--text);font-variant-numeric:tabular-nums">{{ sub.priceFormatted }}</div>
+                        <div style="font:500 11.5px 'Manrope',sans-serif;color:var(--textMuted);margin-top:1px">{{ sub.cycleLabel }}</div>
+                      </div>
+                    </button>
+                  </sc-for>
+                  <sc-if value="{{ cat.isEmpty }}">
+                    <div style="padding:16px;font:500 13px 'Manrope',sans-serif;color:var(--textMuted)">Sin suscripciones aún.</div>
+                  </sc-if>
+                  <button onClick="{{ cat.onAddSub }}" style="width:100%;display:flex;align-items:center;gap:8px;padding:13px 16px;background:transparent;border:none;text-align:left">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"/></svg>
+                    <span style="font:600 13.5px 'Manrope',sans-serif;color:var(--accent)">Agregar suscripción</span>
+                  </button>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+
+          <button onClick="{{ onAddCategory }}" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:15px;background:var(--surface);border:1px dashed var(--border);border-radius:16px;margin-top:6px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="var(--text)" stroke-width="2.2" stroke-linecap="round"/></svg>
+            <span style="font:600 14px 'Manrope',sans-serif;color:var(--text)">Nueva categoría</span>
+          </button>
+          </div>
+          </sc-if>
+
+          <sc-if value="{{ isTypewriterLayout }}" hint-placeholder-val="{{ false }}">
+          <div style="border-top:1.4px solid var(--border)">
+            <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="6">
+              <div>
+                <div onClick="{{ cat.onToggle }}" style="display:flex;align-items:center;gap:11px;padding:13px 2px;border-bottom:1.4px solid var(--border);cursor:pointer">
+                  <div style="width:32px;height:32px;border:1.4px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;flex:none">
+                    <sc-if value="{{ cat.hasIcon }}">
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="{{ cat.iconD }}" stroke="var(--text)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </sc-if>
+                    <sc-if value="{{ cat.noIcon }}">
+                      <span style="font:700 12px 'JetBrains Mono',monospace;color:var(--text)">{{ cat.mono }}</span>
+                    </sc-if>
+                  </div>
+                  <div style="flex:1">
+                    <div style="font:700 13px 'JetBrains Mono',monospace;text-transform:uppercase;color:var(--text);letter-spacing:0.3px">{{ cat.name }}</div>
+                    <div style="font:500 10.5px 'JetBrains Mono',monospace;color:var(--textMuted);margin-top:3px">{{ cat.countLabel }}</div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:14px">
+                    <span style="font:700 16px 'JetBrains Mono',monospace;color:var(--text)">{{ cat.subtotalFormatted }}</span>
+                    <span style="font:700 15px 'JetBrains Mono',monospace;color:var(--text);width:14px;text-align:center">{{ cat.togglerSign }}</span>
+                  </div>
+                </div>
+                <sc-if value="{{ cat.expanded }}">
+                  <sc-for list="{{ cat.subs }}" as="sub" hint-placeholder-count="2">
+                    <button onClick="{{ sub.onOpen }}" style="width:100%;display:flex;align-items:center;gap:10px;padding:10px 2px 10px 14px;border-bottom:1.4px solid var(--border);background:transparent;border-left:none;border-right:none;border-top:none;text-align:left">
+                      <div style="width:26px;height:26px;border:1.4px solid var(--border);border-radius:5px;display:flex;align-items:center;justify-content:center;flex:none">
+                        <span style="font:700 11px 'JetBrains Mono',monospace;color:var(--text)">{{ sub.logoLetter }}</span>
+                      </div>
+                      <span style="font:500 12.5px 'JetBrains Mono',monospace;color:var(--text);text-transform:uppercase;flex:1">{{ sub.name }}</span>
+                      <span style="font:600 13px 'JetBrains Mono',monospace;color:var(--text)">{{ sub.priceFormatted }}</span>
+                    </button>
+                  </sc-for>
+                  <sc-if value="{{ cat.isEmpty }}">
+                    <div style="padding:10px 2px 10px 14px;font:500 12px 'JetBrains Mono',monospace;color:var(--textMuted)">SIN SUSCRIPCIONES</div>
+                  </sc-if>
+                  <button onClick="{{ cat.onAddSub }}" style="width:100%;display:flex;padding:10px 2px 10px 14px;background:transparent;border:none;border-bottom:1.4px solid var(--border);text-align:left">
+                    <span style="font:600 11.5px 'JetBrains Mono',monospace;color:var(--text)">+ AGREGAR SUSCRIPCIÓN</span>
+                  </button>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <button onClick="{{ onAddCategory }}" style="width:100%;display:flex;padding:14px 2px;background:transparent;border:none;margin-top:2px">
+            <span style="font:700 12px 'JetBrains Mono',monospace;color:var(--text);letter-spacing:0.5px">+ AGREGAR CATEGORÍA</span>
+          </button>
+          </sc-if>
+
+          <sc-if value="{{ isSoftLayout }}" hint-placeholder-val="{{ false }}">
+          <div>
+          <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="6">
+            <button onClick="{{ cat.onOpen2 }}" style="width:100%;display:flex;align-items:center;gap:14px;padding:16px 18px;margin-bottom:16px;background:var(--surface);border:none;border-radius:24px;box-shadow:8px 8px 16px var(--shadowLo),-6px -6px 14px var(--shadowHi);text-align:left">
+              <div style="width:52px;height:52px;border-radius:16px;background:var(--surface);display:flex;align-items:center;justify-content:center;flex:none;box-shadow:inset 4px 4px 8px var(--shadowLo),inset -3px -3px 6px var(--shadowHi)">
+                <sc-if value="{{ cat.hasIcon }}">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="{{ cat.iconD }}" stroke="{{ cat.color }}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </sc-if>
+                <sc-if value="{{ cat.noIcon }}">
+                  <span style="font:700 15px 'Space Grotesk',sans-serif;color:{{ cat.color }}">{{ cat.mono }}</span>
+                </sc-if>
+              </div>
+              <div style="flex:1;min-width:0">
+                <div style="font:600 16px 'Manrope',sans-serif;color:var(--text)">{{ cat.name }}</div>
+                <div style="font:500 12.5px 'Manrope',sans-serif;color:var(--textMuted);margin-top:2px">{{ cat.countLabel }}</div>
+              </div>
+              <div style="text-align:right;flex:none;display:flex;align-items:center;gap:8px">
+                <span style="font:700 19px 'Space Grotesk',sans-serif;color:var(--text);font-variant-numeric:tabular-nums">{{ cat.subtotalFormatted }}</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="var(--textMuted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </button>
+          </sc-for>
+          <button onClick="{{ onAddCategory }}" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:16px;background:var(--surface);border:none;border-radius:20px;box-shadow:inset 3px 3px 8px var(--shadowLo),inset -3px -3px 8px var(--shadowHi);margin-top:6px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"/></svg>
+            <span style="font:600 14px 'Manrope',sans-serif;color:var(--accent)">Nueva categoría</span>
+          </button>
+          </div>
+          </sc-if>
+        </div>
+
+      </sc-if>
+
+      <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:8px 20px 40px;animation:fadeIn .18s ease">
+          <div style="display:flex;flex-direction:column;align-items:center;padding:20px 0 26px">
+            <div style="width:64px;height:64px;border-radius:18px;background:{{ detailSub.logoColor }};display:flex;align-items:center;justify-content:center;margin-bottom:14px">
+              <span style="font:700 22px 'Space Grotesk',sans-serif;color:#fff">{{ detailSub.logoLetter }}</span>
+            </div>
+            <div style="font:700 20px 'Space Grotesk',sans-serif;color:var(--text)">{{ detailSub.name }}</div>
+            <div style="font:600 12px 'Manrope',sans-serif;color:var(--accent);background:var(--accentSoft);padding:4px 10px;border-radius:100px;margin-top:8px">{{ detailSub.categoryName }}</div>
+          </div>
+
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border-bottom:1px solid var(--border)">
+              <span style="font:500 13.5px 'Manrope',sans-serif;color:var(--textMuted)">Precio</span>
+              <div style="text-align:right">
+                <div style="font:600 15px 'Space Grotesk',sans-serif;color:var(--text);font-variant-numeric:tabular-nums">{{ detailSub.priceFormatted }}</div>
+                <sc-if value="{{ detailSub.isUsd }}">
+                  <div style="font:500 11.5px 'Manrope',sans-serif;color:var(--textMuted);margin-top:2px">{{ detailSub.clpEquivalentLabel }}</div>
+                </sc-if>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border-bottom:1px solid var(--border)">
+              <span style="font:500 13.5px 'Manrope',sans-serif;color:var(--textMuted)">Ciclo de pago</span>
+              <span style="font:600 14px 'Manrope',sans-serif;color:var(--text)">{{ detailSub.cycleLabel }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border-bottom:1px solid var(--border)">
+              <span style="font:500 13.5px 'Manrope',sans-serif;color:var(--textMuted)">Próximo cobro</span>
+              <span style="font:600 14px 'Manrope',sans-serif;color:var(--text)">{{ detailSub.nextDateFormatted }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border-bottom:1px solid var(--border)">
+              <span style="font:500 13.5px 'Manrope',sans-serif;color:var(--textMuted)">Método de pago</span>
+              <span style="font:600 14px 'Manrope',sans-serif;color:var(--text)">{{ detailSub.payment }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border-bottom:1px solid var(--border)">
+              <span style="font:500 13.5px 'Manrope',sans-serif;color:var(--textMuted)">Sitio web</span>
+              <a href="{{ detailSub.websiteHref }}" target="_blank" rel="noopener" style="font:600 14px 'Manrope',sans-serif;color:var(--accent);text-decoration:none">{{ detailSub.websiteLabel }}</a>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border-bottom:1px solid var(--border)">
+              <span style="font:500 13.5px 'Manrope',sans-serif;color:var(--textMuted)">Usuario</span>
+              <span style="font:600 14px 'Manrope',sans-serif;color:var(--text)">{{ detailSub.usernameLabel }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 18px">
+              <span style="font:500 13.5px 'Manrope',sans-serif;color:var(--textMuted)">Contraseña</span>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="font:600 14px 'Manrope',sans-serif;color:var(--text);letter-spacing:0.5px">{{ detailSub.passwordDisplay }}</span>
+                <button onClick="{{ toggleDetailPassword }}" style="background:transparent;border:none;padding:2px;display:flex;align-items:center">
+                  <sc-if value="{{ showDetailPassword }}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 3l18 18M10.6 10.7a2.5 2.5 0 003.5 3.5M6.6 6.7C4.3 8.2 2.7 10 2 12c1.6 3.6 5.4 7 10 7 1.6 0 3.1-.4 4.4-1.1M9.9 4.2C10.6 4.1 11.3 4 12 4c4.6 0 8.4 3.4 10 7-.5 1.1-1.2 2.2-2 3.1" stroke="var(--textMuted)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </sc-if>
+                  <sc-if value="{{ showDetailPasswordOff }}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M2 12c1.6-3.6 5.4-7 10-7s8.4 3.4 10 7c-1.6 3.6-5.4 7-10 7s-8.4-3.4-10-7z" stroke="var(--textMuted)" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="var(--textMuted)" stroke-width="1.7"/></svg>
+                  </sc-if>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button onClick="{{ detailSub.onEdit }}" style="width:100%;padding:15px;margin-top:20px;background:var(--accent);border:none;border-radius:14px">
+            <span style="font:700 14.5px 'Manrope',sans-serif;color:#fff">Editar suscripción</span>
+          </button>
+
+          <sc-if value="{{ confirmingDeleteSub }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:12px;padding:14px;background:var(--surface);border:1px solid var(--danger);border-radius:14px">
+              <div style="font:500 13px 'Manrope',sans-serif;color:var(--text);margin-bottom:12px">¿Eliminar esta suscripción? Esta acción no se puede deshacer.</div>
+              <div style="display:flex;gap:10px">
+                <button onClick="{{ cancelDeleteSub }}" style="flex:1;padding:12px;background:var(--surface2);border:none;border-radius:10px"><span style="font:600 13.5px 'Manrope',sans-serif;color:var(--text)">Cancelar</span></button>
+                <button onClick="{{ confirmDeleteSub }}" style="flex:1;padding:12px;background:var(--danger);border:none;border-radius:10px"><span style="font:600 13.5px 'Manrope',sans-serif;color:#fff">Eliminar</span></button>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ notConfirmingDeleteSub }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ askDeleteSub }}" style="width:100%;padding:15px;margin-top:10px;background:transparent;border:1px solid var(--border);border-radius:14px">
+              <span style="font:600 14px 'Manrope',sans-serif;color:var(--danger)">Eliminar suscripción</span>
+            </button>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isEditSub }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:18px 20px 40px;animation:fadeIn .18s ease;display:flex;flex-direction:column;gap:18px">
+          <div>
+            <div style="font:600 12px 'Manrope',sans-serif;color:var(--textMuted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">Nombre</div>
+            <input type="text" value="{{ editSub.name }}" onChange="{{ onSubNameChange }}" placeholder="Ej: Netflix" style="width:100%;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;font:600 15px 'Manrope',sans-serif;color:var(--text)" />
+          </div>
+          <div>
+            <div style="font:600 12px 'Manrope',sans-serif;color:var(--textMuted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">Categoría</div>
+            <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px">
+              <sc-for list="{{ categoryChips }}" as="chip" hint-placeholder-count="4">
+                <button onClick="{{ chip.onSelect }}" style="flex:none;display:flex;align-items:center;gap:6px;padding:9px 14px;border-radius:100px;background:{{ chip.bg }};border:1px solid {{ chip.border }}">
+                  <span style="font:600 13px 'Manrope',sans-serif;color:{{ chip.textColor }}">{{ chip.name }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px">
+            <div style="flex:1">
+              <div style="font:600 12px 'Manrope',sans-serif;color:var(--textMuted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">Moneda</div>
+              <div style="display:flex;gap:8px;height:48px">
+                <sc-for list="{{ currencyOptions }}" as="cur" hint-placeholder-count="2">
+                  <button onClick="{{ cur.onSelect }}" style="flex:1;background:{{ cur.bg }};border:1px solid {{ cur.border }};border-radius:12px">
+                    <span style="font:600 12.5px 'Manrope',sans-serif;color:{{ cur.textColor }}">{{ cur.label }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="flex:1">
+              <div style="font:600 12px 'Manrope',sans-serif;color:var(--textMuted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">Ciclo</div>
+              <div style="display:flex;gap:8px;height:48px">
+                <sc-for list="{{ cycleOptions }}" as="cyc" hint-placeholder-count="2">
+                  <button onClick="{{ cyc.onSelect }}" style="flex:1;background:{{ cyc.bg }};border:1px solid {{ cyc.border }};border-radius:12px">
+                    <span style="font:600 12.5px 'Manrope',sans-serif;color:{{ cyc.textColor }}">{{ cyc.label }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font:600 12px 'Manrope',sans-serif;color:var(--textMuted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">Precio</div>
+            <input type="number" step="0.01" value="{{ editSub.price }}" onChange="{{ onSubPriceChange }}" placeholder="0.00" style="width:100%;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;font:600 15px 'Space Grotesk',sans-serif;color:var(--text)" />
+          </div>
+          <div>
+            <div style="font:600 12px 'Manrope',sans-serif;color:var(--textMuted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">Próxima fecha de cobro</div>
+            <input type="date" value="{{ editSub.nextDate }}" onChange="{{ onSubDateChange }}" style="width:100%;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;font:600 14px 'Manrope',sans-serif;color:var(--text);color-scheme:dark" />
+          </div>
+          <div>
+            <div style="font:600 12px 'Manrope',sans-serif;color:var(--textMuted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">Método de pago</div>
+            <input type="text" value="{{ editSub.payment }}" onChange="{{ onSubPaymentChange }}" placeholder="Ej: Visa •••• 4242" style="width:100%;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;font:600 14px 'Manrope',sans-serif;color:var(--text)" />
+          </div>
+          <div>
+            <div style="font:600 12px 'Manrope',sans-serif;color:var(--textMuted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">Sitio web para acceder</div>
+            <input type="text" value="{{ editSub.website }}" onChange="{{ onSubWebsiteChange }}" placeholder="Ej: netflix.com" style="width:100%;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;font:600 14px 'Manrope',sans-serif;color:var(--text)" />
+          </div>
+          <div>
+            <div style="font:600 12px 'Manrope',sans-serif;color:var(--textMuted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">Usuario</div>
+            <input type="text" value="{{ editSub.username }}" onChange="{{ onSubUsernameChange }}" placeholder="Ej: correo o nombre de usuario" style="width:100%;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;font:600 14px 'Manrope',sans-serif;color:var(--text)" />
+          </div>
+          <div>
+            <div style="font:600 12px 'Manrope',sans-serif;color:var(--textMuted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">Contraseña</div>
+            <div style="display:flex;gap:8px">
+              <input type="{{ formPasswordType }}" value="{{ editSub.password }}" onChange="{{ onSubPasswordChange }}" placeholder="Contraseña" style="flex:1;width:100%;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;font:600 14px 'Manrope',sans-serif;color:var(--text)" />
+              <button onClick="{{ toggleFormPassword }}" style="width:48px;flex:none;background:var(--surface);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center">
+                <sc-if value="{{ showFormPassword }}">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 3l18 18M10.6 10.7a2.5 2.5 0 003.5 3.5M6.6 6.7C4.3 8.2 2.7 10 2 12c1.6 3.6 5.4 7 10 7 1.6 0 3.1-.4 4.4-1.1M9.9 4.2C10.6 4.1 11.3 4 12 4c4.6 0 8.4 3.4 10 7-.5 1.1-1.2 2.2-2 3.1" stroke="var(--textMuted)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </sc-if>
+                <sc-if value="{{ showFormPasswordOff }}">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M2 12c1.6-3.6 5.4-7 10-7s8.4 3.4 10 7c-1.6 3.6-5.4 7-10 7s-8.4-3.4-10-7z" stroke="var(--textMuted)" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="var(--textMuted)" stroke-width="1.7"/></svg>
+                </sc-if>
+              </button>
+            </div>
+          </div>
+          <div>
+            <div style="font:600 12px 'Manrope',sans-serif;color:var(--textMuted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">Color del logo</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <sc-for list="{{ logoSwatches }}" as="sw" hint-placeholder-count="8">
+                <button onClick="{{ sw.onSelect }}" style="width:36px;height:36px;border-radius:50%;background:{{ sw.hex }};border:{{ sw.ring }};padding:0"></button>
+              </sc-for>
+            </div>
+          </div>
+
+          <button onClick="{{ saveSub }}" style="width:100%;padding:16px;background:var(--accent);border:none;border-radius:14px;margin-top:4px">
+            <span style="font:700 15px 'Manrope',sans-serif;color:#fff">Guardar suscripción</span>
+          </button>
+
+          <sc-if value="{{ canDeleteSub }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ deleteSub }}" style="width:100%;padding:14px;background:transparent;border:1px solid var(--border);border-radius:14px">
+              <span style="font:600 14px 'Manrope',sans-serif;color:var(--danger)">Eliminar suscripción</span>
+            </button>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCategoryDetail }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:8px 20px 100px;animation:fadeIn .18s ease">
+          <div style="display:flex;flex-direction:column;align-items:center;padding:14px 0 20px">
+            <div style="width:56px;height:56px;border-radius:16px;background:{{ categoryDetailCat.color }};display:flex;align-items:center;justify-content:center;margin-bottom:10px">
+              <span style="font:700 16px 'Space Grotesk',sans-serif;color:#fff">{{ categoryDetailCat.mono }}</span>
+            </div>
+            <div style="font:700 22px 'Space Grotesk',sans-serif;color:var(--text)">{{ categoryDetailCat.subtotalFormatted }}</div>
+            <div style="font:500 12.5px 'Manrope',sans-serif;color:var(--textMuted);margin-top:2px">{{ categoryDetailCat.countLabel }}</div>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:16px;background:var(--surface);overflow:hidden">
+            <sc-for list="{{ categoryDetailCat.subs }}" as="sub" hint-placeholder-count="3">
+              <button onClick="{{ sub.onOpen }}" style="width:100%;display:flex;align-items:center;gap:12px;padding:14px 16px;background:transparent;border:none;border-bottom:1px solid var(--border);text-align:left">
+                <div style="width:34px;height:34px;border-radius:10px;background:{{ sub.logoColor }};display:flex;align-items:center;justify-content:center;flex:none">
+                  <span style="font:700 13px 'Space Grotesk',sans-serif;color:#fff">{{ sub.logoLetter }}</span>
+                </div>
+                <div style="flex:1;min-width:0">
+                  <div style="font:600 14.5px 'Manrope',sans-serif;color:var(--text)">{{ sub.name }}</div>
+                  <div style="font:500 12px 'Manrope',sans-serif;color:var(--textMuted);margin-top:1px">Próx. cobro · {{ sub.nextDateFormatted }}</div>
+                </div>
+                <div style="text-align:right;flex:none">
+                  <div style="font:600 14px 'Space Grotesk',sans-serif;color:var(--text);font-variant-numeric:tabular-nums">{{ sub.priceFormatted }}</div>
+                  <div style="font:500 11.5px 'Manrope',sans-serif;color:var(--textMuted);margin-top:1px">{{ sub.cycleLabel }}</div>
+                </div>
+              </button>
+            </sc-for>
+            <sc-if value="{{ categoryDetailCat.isEmpty }}">
+              <div style="padding:16px;font:500 13px 'Manrope',sans-serif;color:var(--textMuted)">Sin suscripciones aún.</div>
+            </sc-if>
+            <button onClick="{{ categoryDetailCat.onAddSub }}" style="width:100%;display:flex;align-items:center;gap:8px;padding:14px 16px;background:transparent;border:none;text-align:left">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"/></svg>
+              <span style="font:600 13.5px 'Manrope',sans-serif;color:var(--accent)">Agregar suscripción</span>
+            </button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isEditCategory }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:18px 20px 40px;animation:fadeIn .18s ease;display:flex;flex-direction:column;gap:18px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:10px 0 4px">
+            <div style="width:56px;height:56px;border-radius:16px;background:{{ editCategory.color }};display:flex;align-items:center;justify-content:center">
+              <span style="font:700 18px 'Space Grotesk',sans-serif;color:#fff">{{ editCategoryMono }}</span>
+            </div>
+          </div>
+          <div>
+            <div style="font:600 12px 'Manrope',sans-serif;color:var(--textMuted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">Nombre de la categoría</div>
+            <input type="text" value="{{ editCategory.name }}" onChange="{{ onCategoryNameChange }}" placeholder="Ej: Videojuegos" style="width:100%;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;font:600 15px 'Manrope',sans-serif;color:var(--text)" />
+          </div>
+          <div>
+            <div style="font:600 12px 'Manrope',sans-serif;color:var(--textMuted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">Color</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <sc-for list="{{ categorySwatches }}" as="sw" hint-placeholder-count="8">
+                <button onClick="{{ sw.onSelect }}" style="width:36px;height:36px;border-radius:50%;background:{{ sw.hex }};border:{{ sw.ring }};padding:0"></button>
+              </sc-for>
+            </div>
+          </div>
+
+          <button onClick="{{ saveCategory }}" style="width:100%;padding:16px;background:var(--accent);border:none;border-radius:14px;margin-top:4px">
+            <span style="font:700 15px 'Manrope',sans-serif;color:#fff">Guardar categoría</span>
+          </button>
+
+          <sc-if value="{{ confirmingDeleteCategory }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:14px;background:var(--surface);border:1px solid var(--danger);border-radius:14px">
+              <div style="font:500 13px 'Manrope',sans-serif;color:var(--text);margin-bottom:12px">{{ deleteCategoryWarning }}</div>
+              <div style="display:flex;gap:10px">
+                <button onClick="{{ cancelDeleteCategory }}" style="flex:1;padding:12px;background:var(--surface2);border:none;border-radius:10px"><span style="font:600 13.5px 'Manrope',sans-serif;color:var(--text)">Cancelar</span></button>
+                <button onClick="{{ confirmDeleteCategory }}" style="flex:1;padding:12px;background:var(--danger);border:none;border-radius:10px"><span style="font:600 13.5px 'Manrope',sans-serif;color:#fff">Eliminar</span></button>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ canDeleteCategory }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ askDeleteCategory }}" style="width:100%;padding:14px;background:transparent;border:1px solid var(--border);border-radius:14px">
+              <span style="font:600 14px 'Manrope',sans-serif;color:var(--danger)">Eliminar categoría</span>
+            </button>
+          </sc-if>
+        </div>
+      </sc-if>
+
+    </div>
+
+    <div style="height:26px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--bg)">
+      <div style="width:120px;height:4px;border-radius:2px;background:var(--text);opacity:0.3"></div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;layoutStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;list&quot;,&quot;options&quot;:[&quot;list&quot;,&quot;typewriter&quot;,&quot;soft&quot;],&quot;tsType&quot;:&quot;'list'|'typewriter'|'soft'&quot;,&quot;section&quot;:&quot;Diseño&quot;}}">
+const PALETTE = ['#5B8CFF','#22C55E','#F59E0B','#EF4444','#A855F7','#06B6D4','#EC4899','#84CC16'];
+const MONTHS = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const USD_CLP_RATE = 950; // referencial, según Google Finance (USD/CLP)
+
+function deriveMono(name) {
+  const parts = (name || '').trim().split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return (name || '').trim().slice(0, 2).toUpperCase() || '?';
+}
+function fmtCLP(n) {
+  return '$' + Math.round(Number(n) || 0).toLocaleString('es-CL');
+}
+function fmtUSD(n) {
+  return 'US$' + (Number(n) || 0).toFixed(2);
+}
+function fmtMoney(sub) {
+  return sub.currency === 'USD' ? fmtUSD(sub.price) : fmtCLP(sub.price);
+}
+function fmtDate(iso) {
+  if (!iso) return 'Sin definir';
+  const [y, m, d] = iso.split('-').map(Number);
+  if (!y || !m || !d) return 'Sin definir';
+  return `${d} ${MONTHS[m - 1]}`;
+}
+const ICONS = [
+  { keys: ['stream', 'video', 'tv'], d: 'M8 5.5l11 6.5-11 6.5V5.5z' },
+  { keys: ['music', 'música', 'musica', 'audio'], d: 'M9 18V6l10-2v12 M9 18a3 3 0 11-1.2-2.4 M19 16a3 3 0 11-1.2-2.4' },
+  { keys: ['almacen', 'nube', 'cloud', 'drive'], d: 'M7 18a4 4 0 01-.6-7.95A5 5 0 0116.9 8.6 4 4 0 0117 18H7z' },
+  { keys: ['compra', 'super', 'mercado', 'tienda'], d: 'M4 4h2l1.3 12.3a2 2 0 002 1.7h7.4a2 2 0 002-1.7L18.5 8H6.5 M9.2 20a1 1 0 100-2 1 1 0 000 2z M16.8 20a1 1 0 100-2 1 1 0 000 2z' },
+  { keys: ['comida', 'delivery', 'food', 'restaur'], d: 'M4 8.5l8-4 8 4-8 4-8-4z M4 8.5v7.5l8 4 8-4V8.5 M12 12.5v7.5' },
+  { keys: ['transporte', 'auto', 'car', 'movilidad', 'viaje'], d: 'M5 16.5l1.4-5A2 2 0 018.3 10h7.4a2 2 0 011.9 1.5l1.4 5 M5 16.5h14v2.5a1 1 0 01-1 1h-1a1 1 0 01-1-1v-1H8v1a1 1 0 01-1 1H6a1 1 0 01-1-1v-2.5z M7.5 14h9' },
+];
+function iconForCategory(name) {
+  const n = (name || '').toLowerCase();
+  const found = ICONS.find(ic => ic.keys.some(k => n.includes(k)));
+  return found ? found.d : null;
+}
+const WEEKDAY_LETTERS = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+function buildCalendar(year, month, allSubs) {
+  const first = new Date(year, month, 1);
+  const startOffset = (first.getDay() + 6) % 7; // Monday-first
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const cells = [];
+  for (let i = 0; i < startOffset; i++) cells.push({ key: 'pad' + i, inMonth: false, day: '', badges: [] });
+  for (let d = 1; d <= daysInMonth; d++) {
+    const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    const dayBadges = allSubs.filter(su => su.nextDate === iso).map(su => ({ logoColor: su.logoColor, logoLetter: su.logoLetter, name: su.name }));
+    const isToday = iso === todayStr;
+    cells.push({ key: iso, inMonth: true, day: d, isToday, cellBg: isToday ? 'var(--accentSoft)' : 'transparent', badges: dayBadges.slice(0, 3), extra: dayBadges.length > 3 ? dayBadges.length - 3 : 0, hasExtra: dayBadges.length > 3 });
+  }
+  while (cells.length % 7 !== 0) cells.push({ key: 'pad-e' + cells.length, inMonth: false, day: '', badges: [] });
+  return cells;
+}
+function monthlyEqCLP(sub) {
+  const p = Number(sub.price) || 0;
+  const monthly = sub.cycle === 'Anual' ? p / 12 : p;
+  return sub.currency === 'USD' ? monthly * USD_CLP_RATE : monthly;
+}
+
+class Component extends DCLogic {
+  state = {
+    theme: 'dark',
+    screen: 'home',
+    selectedSubId: null,
+    editSub: null,
+    editCategory: null,
+    confirmingDeleteSub: false,
+    confirmingDeleteCategory: false,
+    showDetailPassword: false,
+    showFormPassword: false,
+    categoryDetailId: null,
+    styleOverride: null,
+    categories: [
+      { id: 'streaming', name: 'Streaming', mono: 'ST', color: '#5B8CFF', expanded: true, subs: [
+        { id: 's1', name: 'Netflix', price: 15.99, currency: 'USD', cycle: 'Mensual', nextDate: '2026-07-22', payment: 'Visa •••• 4242', logoColor: '#E50914', logoLetter: 'N', website: 'netflix.com', username: 'ana.perez@gmail.com', password: 'Nflx#2026x' },
+        { id: 's2', name: 'Disney+', price: 8.99, currency: 'USD', cycle: 'Mensual', nextDate: '2026-07-28', payment: 'Mastercard •••• 8821', logoColor: '#113CCF', logoLetter: 'D+', website: 'disneyplus.com', username: 'ana.perez@gmail.com', password: 'Dsny!8821' },
+        { id: 's3', name: 'HBO Max', price: 11.99, currency: 'USD', cycle: 'Mensual', nextDate: '2026-08-03', payment: 'Visa •••• 4242', logoColor: '#6C2EB5', logoLetter: 'M', website: 'max.com', username: 'ana.perez@gmail.com', password: 'Max$maxi3' },
+      ]},
+      { id: 'musica', name: 'Música', mono: 'MU', color: '#22C55E', expanded: true, subs: [
+        { id: 's4', name: 'Spotify', price: 9990, currency: 'CLP', cycle: 'Mensual', nextDate: '2026-07-19', payment: 'Visa •••• 4242', logoColor: '#1DB954', logoLetter: 'S', website: 'spotify.com', username: 'ana.perez', password: 'Sp0tify!24' },
+        { id: 's5', name: 'YouTube Music', price: 10.99, currency: 'USD', cycle: 'Mensual', nextDate: '2026-08-05', payment: 'PayPal', logoColor: '#FF0000', logoLetter: 'Y', website: 'music.youtube.com', username: 'ana.perez@gmail.com', password: 'Ytm#20265' },
+      ]},
+      { id: 'cloud', name: 'Almacenamiento', mono: 'CL', color: '#06B6D4', expanded: true, subs: [
+        { id: 's6', name: 'Google One', price: 2.99, currency: 'USD', cycle: 'Mensual', nextDate: '2026-07-25', payment: 'Google Pay', logoColor: '#4285F4', logoLetter: 'G', website: 'one.google.com', username: 'ana.perez@gmail.com', password: 'G0neSafe!' },
+        { id: 's7', name: 'Dropbox', price: 11.99, currency: 'USD', cycle: 'Mensual', nextDate: '2026-08-01', payment: 'Visa •••• 4242', logoColor: '#0061FF', logoLetter: 'D', website: 'dropbox.com', username: 'ana.perez@gmail.com', password: 'Dbx#77281' },
+      ]},
+      { id: 'compras', name: 'Compras online', mono: 'CO', color: '#F59E0B', expanded: false, subs: [
+        { id: 's8', name: 'Amazon Prime', price: 79.00, currency: 'USD', cycle: 'Anual', nextDate: '2027-02-14', payment: 'Visa •••• 4242', logoColor: '#FF9900', logoLetter: 'a', website: 'amazon.com', username: 'ana.perez@gmail.com', password: 'Amz!Prime9' },
+        { id: 's9', name: 'Rappi Prime', price: 9990, currency: 'CLP', cycle: 'Mensual', nextDate: '2026-07-30', payment: 'Mastercard •••• 8821', logoColor: '#FF441F', logoLetter: 'R', website: 'rappi.com', username: 'ana.perez@gmail.com', password: 'Rpp#Prime1' },
+      ]},
+      { id: 'comida', name: 'Delivery de comida', mono: 'DE', color: '#EC4899', expanded: false, subs: [
+        { id: 's10', name: 'Uber One', price: 6990, currency: 'CLP', cycle: 'Mensual', nextDate: '2026-07-21', payment: 'Visa •••• 4242', logoColor: '#06C167', logoLetter: 'U', website: 'ubereats.com', username: 'ana.perez@gmail.com', password: 'Ub3rOne!7' },
+        { id: 's11', name: 'PedidosYa', price: 5990, currency: 'CLP', cycle: 'Mensual', nextDate: '2026-08-02', payment: 'Mastercard •••• 8821', logoColor: '#FA0050', logoLetter: 'P', website: 'pedidosya.com', username: 'ana.perez@gmail.com', password: 'Pya$2026' },
+      ]},
+      { id: 'transporte', name: 'Transporte', mono: 'TR', color: '#A855F7', expanded: false, subs: [
+        { id: 's12', name: 'Cabify', price: 4990, currency: 'CLP', cycle: 'Mensual', nextDate: '2026-07-24', payment: 'Visa •••• 4242', logoColor: '#6D2B8B', logoLetter: 'C', website: 'cabify.com', username: 'ana.perez@gmail.com', password: 'Cbfy!4499' },
+      ]},
+    ],
+  };
+
+  toggleTheme = () => this.setState(s => ({ theme: s.theme === 'dark' ? 'light' : 'dark' }));
+  goHome = () => this.setState({ screen: 'home', selectedSubId: null, editSub: null, editCategory: null, confirmingDeleteSub: false, confirmingDeleteCategory: false, categoryDetailId: null });
+
+  toggleCategory = (id) => this.setState(s => ({ categories: s.categories.map(c => c.id === id ? { ...c, expanded: !c.expanded } : c) }));
+
+  openCategoryDetail = (id) => this.setState({ screen: 'categoryDetail', categoryDetailId: id });
+  setStyle = (val) => this.setState({ styleOverride: val });
+  cycleStyle = () => {
+    const order = ['list', 'typewriter', 'soft'];
+    const current = this.state.styleOverride || (this.props.layoutStyle ?? 'list');
+    const next = order[(order.indexOf(current) + 1) % order.length];
+    this.setState({ styleOverride: next });
+  };
+
+  openDetail = (subId) => this.setState({ screen: 'detail', selectedSubId: subId, confirmingDeleteSub: false, showDetailPassword: false });
+
+  openEditSub = (sub, categoryId) => {
+    const firstCat = this.state.categories[0];
+    this.setState({
+      screen: 'editSub', showFormPassword: false,
+      editSub: sub ? { ...sub } : { id: null, name: '', categoryId: categoryId || (firstCat ? firstCat.id : ''), price: '', currency: 'CLP', cycle: 'Mensual', nextDate: '', payment: '', logoColor: PALETTE[0], logoLetter: '', website: '', username: '', password: '' },
+    });
+  };
+
+  toggleDetailPassword = () => this.setState(s => ({ showDetailPassword: !s.showDetailPassword }));
+  toggleFormPassword = () => this.setState(s => ({ showFormPassword: !s.showFormPassword }));
+
+  setEditSubField = (field, value) => this.setState(s => ({ editSub: { ...s.editSub, [field]: value } }));
+
+  saveSub = () => {
+    const draft = this.state.editSub;
+    if (!draft.name || !draft.name.trim() || !draft.categoryId) return;
+    const isNew = !draft.id;
+    const finalSub = { ...draft, id: draft.id || ('sub_' + Date.now()), logoLetter: draft.logoLetter && draft.logoLetter.trim() ? draft.logoLetter : deriveMono(draft.name).slice(0, 1) };
+    this.setState(s => {
+      let categories = s.categories.map(c => ({ ...c, subs: c.subs.filter(su => su.id !== finalSub.id) }));
+      categories = categories.map(c => c.id === finalSub.categoryId ? { ...c, subs: [...c.subs, finalSub], expanded: true } : c);
+      return { categories, screen: 'home', editSub: null };
+    });
+  };
+
+  deleteSub = () => {
+    const id = this.state.editSub && this.state.editSub.id;
+    if (!id) return;
+    this.setState(s => ({ categories: s.categories.map(c => ({ ...c, subs: c.subs.filter(su => su.id !== id) })), screen: 'home', editSub: null }));
+  };
+
+  askDeleteSub = () => this.setState({ confirmingDeleteSub: true });
+  cancelDeleteSub = () => this.setState({ confirmingDeleteSub: false });
+  confirmDeleteSub = () => {
+    const id = this.state.selectedSubId;
+    this.setState(s => ({ categories: s.categories.map(c => ({ ...c, subs: c.subs.filter(su => su.id !== id) })), screen: 'home', selectedSubId: null, confirmingDeleteSub: false }));
+  };
+
+  openEditCategory = (cat) => this.setState({ screen: 'editCategory', editCategory: cat ? { ...cat } : { id: null, name: '', color: PALETTE[0] }, confirmingDeleteCategory: false });
+  setEditCategoryField = (field, value) => this.setState(s => ({ editCategory: { ...s.editCategory, [field]: value } }));
+
+  saveCategory = () => {
+    const draft = this.state.editCategory;
+    if (!draft.name || !draft.name.trim()) return;
+    const mono = deriveMono(draft.name);
+    this.setState(s => {
+      if (draft.id) {
+        return { categories: s.categories.map(c => c.id === draft.id ? { ...c, name: draft.name, color: draft.color, mono } : c), screen: 'home', editCategory: null };
+      }
+      const newCat = { id: 'cat_' + Date.now(), name: draft.name, color: draft.color, mono, expanded: true, subs: [] };
+      return { categories: [...s.categories, newCat], screen: 'home', editCategory: null };
+    });
+  };
+
+  askDeleteCategory = () => this.setState({ confirmingDeleteCategory: true });
+  cancelDeleteCategory = () => this.setState({ confirmingDeleteCategory: false });
+  confirmDeleteCategory = () => {
+    const id = this.state.editCategory && this.state.editCategory.id;
+    if (!id) return;
+    this.setState(s => ({ categories: s.categories.filter(c => c.id !== id), screen: 'home', editCategory: null, confirmingDeleteCategory: false }));
+  };
+
+  renderVals() {
+    const s = this.state;
+    const isDark = s.theme === 'dark';
+    const effectiveStyle = s.styleOverride || (this.props.layoutStyle ?? 'list');
+    const isSoft = effectiveStyle === 'soft';
+    const isTypewriter = effectiveStyle === 'typewriter';
+    const themeVars = isTypewriter ? {
+      '--bg': '#E7EDE3', '--surface': '#E7EDE3', '--surface2': '#DCE4D7', '--border': '#1C1E1B',
+      '--text': '#1C1E1B', '--textMuted': '#5B6157', '--accent': '#1C1E1B', '--accentSoft': 'rgba(28,30,27,0.08)', '--danger': '#8B3A2B',
+      '--shadowHi': 'transparent', '--shadowLo': 'transparent',
+    } : isSoft ? {
+      '--bg': '#EFE9DD', '--surface': '#EFE9DD', '--surface2': '#E6DFD0', '--border': 'rgba(90,74,52,0.12)',
+      '--text': '#2E2013', '--textMuted': '#8C8171', '--accent': '#A9782E', '--accentSoft': 'rgba(169,120,46,0.14)', '--danger': '#B5493B',
+      '--shadowHi': 'rgba(255,255,255,0.85)', '--shadowLo': 'rgba(120,100,70,0.25)',
+    } : isDark ? {
+      '--bg': '#0B0D10', '--surface': '#15181D', '--surface2': '#1D2128', '--border': '#262B33',
+      '--text': '#F2F4F7', '--textMuted': '#8A94A6', '--accent': '#5B8CFF', '--accentSoft': 'rgba(91,140,255,0.16)', '--danger': '#FF6B6B',
+      '--shadowHi': 'rgba(255,255,255,0.05)', '--shadowLo': 'rgba(0,0,0,0.35)',
+    } : {
+      '--bg': '#F3F4F7', '--surface': '#FFFFFF', '--surface2': '#F0F1F5', '--border': '#E3E6EC',
+      '--text': '#14161A', '--textMuted': '#6B7280', '--accent': '#3763E0', '--accentSoft': 'rgba(55,99,224,0.10)', '--danger': '#E0453B',
+      '--shadowHi': 'rgba(255,255,255,0.7)', '--shadowLo': 'rgba(20,22,26,0.10)',
+    };
+
+    const allSubs = [];
+    s.categories.forEach(c => c.subs.forEach(su => allSubs.push({ ...su, categoryId: c.id, categoryName: c.name })));
+    const totalMonthly = allSubs.reduce((sum, su) => sum + monthlyEqCLP(su), 0);
+    const hasUsdSubs = allSubs.some(su => su.currency === 'USD');
+
+    const categories = s.categories.map(c => {
+      const subsSorted = [...c.subs].sort((a, b) => (a.nextDate || '9999').localeCompare(b.nextDate || '9999'));
+      const subtotal = c.subs.reduce((sum, su) => sum + monthlyEqCLP(su), 0);
+      const iconD = iconForCategory(c.name);
+      return {
+        ...c,
+        expanded: c.expanded,
+        isEmpty: c.subs.length === 0,
+        subtotalFormatted: fmtCLP(subtotal),
+        countLabel: `${c.subs.length} Suscrip.`,
+        iconD, hasIcon: !!iconD, noIcon: !iconD,
+        togglerSign: c.expanded ? '−' : '+',
+        chevronTransform: c.expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+        onToggle: () => this.toggleCategory(c.id),
+        onOpen2: () => this.openCategoryDetail(c.id),
+        onEdit: (e) => { e.stopPropagation(); this.openEditCategory(c); },
+        onAddSub: () => this.openEditSub(null, c.id),
+        subs: subsSorted.map(su => ({
+          ...su,
+          priceFormatted: fmtMoney(su),
+          cycleLabel: su.cycle === 'Anual' ? 'Anual' : 'Mensual',
+          nextDateFormatted: fmtDate(su.nextDate),
+          onOpen: () => this.openDetail(su.id),
+        })),
+      };
+    });
+
+    const now = new Date();
+    const calendarDays = buildCalendar(now.getFullYear(), now.getMonth(), allSubs);
+    const calendarMonthLabel = now.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' });
+
+    const isListLayout2 = !isTypewriter && !isSoft;
+
+    let categoryDetailCat = null;
+    if (s.categoryDetailId) {
+      const found = categories.find(c => c.id === s.categoryDetailId);
+      if (found) categoryDetailCat = found;
+    }
+
+    let detailSub = null;
+    if (s.selectedSubId) {
+      const found = allSubs.find(su => su.id === s.selectedSubId);
+      if (found) {
+        detailSub = {
+          ...found,
+          priceFormatted: fmtMoney(found),
+          isUsd: found.currency === 'USD',
+          clpEquivalentLabel: found.currency === 'USD' ? `≈ ${fmtCLP(Number(found.price) * USD_CLP_RATE)} CLP` : '',
+          cycleLabel: found.cycle === 'Anual' ? 'Anual' : 'Mensual',
+          nextDateFormatted: fmtDate(found.nextDate),
+          websiteLabel: found.website || 'Sin definir',
+          websiteHref: found.website ? (found.website.startsWith('http') ? found.website : 'https://' + found.website) : '#',
+          usernameLabel: found.username || 'Sin definir',
+          passwordDisplay: found.password ? (s.showDetailPassword ? found.password : '•'.repeat(Math.min(found.password.length, 12))) : 'Sin definir',
+          onEdit: () => this.openEditSub(found, found.categoryId),
+        };
+      }
+    }
+
+    const editSub = s.editSub || { name: '', categoryId: '', price: '', currency: 'CLP', cycle: 'Mensual', nextDate: '', payment: '', logoColor: PALETTE[0], website: '', username: '', password: '' };
+    const categoryChips = s.categories.map(c => {
+      const sel = c.id === editSub.categoryId;
+      return { id: c.id, name: c.name, onSelect: () => this.setEditSubField('categoryId', c.id), bg: sel ? c.color : 'var(--surface)', border: sel ? c.color : 'var(--border)', textColor: sel ? '#fff' : 'var(--text)' };
+    });
+    const currencyOptions = ['CLP', 'USD'].map(label => {
+      const sel = (editSub.currency || 'CLP') === label;
+      return { label, onSelect: () => this.setEditSubField('currency', label), bg: sel ? 'var(--accent)' : 'var(--surface)', border: sel ? 'var(--accent)' : 'var(--border)', textColor: sel ? '#fff' : 'var(--text)' };
+    });
+    const cycleOptions = ['Mensual', 'Anual'].map(label => {
+      const sel = editSub.cycle === label;
+      return { label, onSelect: () => this.setEditSubField('cycle', label), bg: sel ? 'var(--accent)' : 'var(--surface)', border: sel ? 'var(--accent)' : 'var(--border)', textColor: sel ? '#fff' : 'var(--text)' };
+    });
+    const logoSwatches = PALETTE.map(hex => ({ hex, onSelect: () => this.setEditSubField('logoColor', hex), ring: editSub.logoColor === hex ? '3px solid var(--text)' : '1px solid var(--border)' }));
+
+    const editCategory = s.editCategory || { name: '', color: PALETTE[0] };
+    const categorySwatches = PALETTE.map(hex => ({ hex, onSelect: () => this.setEditCategoryField('color', hex), ring: editCategory.color === hex ? '3px solid var(--text)' : '1px solid var(--border)' }));
+    const editCategoryMono = deriveMono(editCategory.name) || '?';
+    const targetCat = editCategory.id ? s.categories.find(c => c.id === editCategory.id) : null;
+    const deleteCategoryWarning = targetCat && targetCat.subs.length > 0
+      ? `¿Eliminar "${targetCat.name}"? También se eliminarán sus ${targetCat.subs.length} suscripciones.`
+      : `¿Eliminar la categoría "${editCategory.name}"?`;
+
+    return {
+      isDark, isLight: !isDark,
+      backdropStyle: `min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 20%, #1a1d24, #05060a);padding:40px 20px;font-family:'Manrope',sans-serif`,
+      phoneStyle: `${Object.entries(themeVars).map(([k, v]) => `${k}:${v}`).join(';')};width:390px;height:844px;border-radius:44px;border:10px solid #08090b;box-shadow:0 40px 90px -20px rgba(0,0,0,0.6);background:var(--bg);display:flex;flex-direction:column;overflow:hidden;position:relative`,
+
+      isHome: s.screen === 'home', isDetail: s.screen === 'detail', isEditSub: s.screen === 'editSub', isEditCategory: s.screen === 'editCategory',
+      isCategoryDetail: s.screen === 'categoryDetail',
+      toggleTheme: this.toggleTheme, goHome: this.goHome,
+      isTypewriterLayout: isTypewriter, isListLayout: isListLayout2, isSoftLayout: isSoft,
+      onCycleStyle: this.cycleStyle,
+      categoryDetailCat, categoryDetailTitle: categoryDetailCat ? categoryDetailCat.name : '',
+      onCategoryDetailEdit: () => categoryDetailCat && this.openEditCategory(s.categories.find(c => c.id === categoryDetailCat.id)),
+
+      totalMonthlyFormatted: fmtCLP(totalMonthly),
+      totalYearlyFormatted: fmtCLP(totalMonthly * 12),
+      hasUsdSubs,
+      conversionNote: `Convierte USD a CLP a ${fmtCLP(USD_CLP_RATE)} por dólar (referencial, Google Finance)`,
+      subsCountLabel: `${allSubs.length} ${allSubs.length === 1 ? 'suscripción activa' : 'suscripciones activas'}`,
+      categories,
+      calendarWeekdays: WEEKDAY_LETTERS, calendarDays, calendarMonthLabel,
+      onAddCategory: () => this.openEditCategory(null),
+      onQuickAddSub: () => this.openEditSub(null, null),
+
+      detailSub, confirmingDeleteSub: s.confirmingDeleteSub, notConfirmingDeleteSub: !s.confirmingDeleteSub,
+      askDeleteSub: this.askDeleteSub, cancelDeleteSub: this.cancelDeleteSub, confirmDeleteSub: this.confirmDeleteSub,
+      showDetailPassword: s.showDetailPassword, showDetailPasswordOff: !s.showDetailPassword, toggleDetailPassword: this.toggleDetailPassword,
+      showFormPassword: s.showFormPassword, toggleFormPassword: this.toggleFormPassword,
+      formPasswordType: s.showFormPassword ? 'text' : 'password',
+      showFormPasswordOff: !s.showFormPassword,
+
+      editSubTitle: editSub.id ? 'Editar suscripción' : 'Nueva suscripción',
+      editSub, categoryChips, cycleOptions, currencyOptions, logoSwatches,
+      onSubNameChange: (e) => this.setEditSubField('name', e.target.value),
+      onSubPriceChange: (e) => this.setEditSubField('price', e.target.value),
+      onSubDateChange: (e) => this.setEditSubField('nextDate', e.target.value),
+      onSubPaymentChange: (e) => this.setEditSubField('payment', e.target.value),
+      onSubWebsiteChange: (e) => this.setEditSubField('website', e.target.value),
+      onSubUsernameChange: (e) => this.setEditSubField('username', e.target.value),
+      onSubPasswordChange: (e) => this.setEditSubField('password', e.target.value),
+      saveSub: this.saveSub, deleteSub: this.deleteSub, canDeleteSub: !!editSub.id,
+
+      editCategoryTitle: editCategory.id ? 'Editar categoría' : 'Nueva categoría',
+      editCategory, editCategoryMono, categorySwatches,
+      onCategoryNameChange: (e) => this.setEditCategoryField('name', e.target.value),
+      saveCategory: this.saveCategory, canDeleteCategory: !!editCategory.id,
+      confirmingDeleteCategory: s.confirmingDeleteCategory, deleteCategoryWarning,
+      askDeleteCategory: this.askDeleteCategory, cancelDeleteCategory: this.cancelDeleteCategory, confirmDeleteCategory: this.confirmDeleteCategory,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

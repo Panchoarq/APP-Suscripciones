@@ -1,0 +1,22 @@
+# Gradle
+SuscripcionesApp/.gradle/
+SuscripcionesApp/build/
+SuscripcionesApp/app/build/
+SuscripcionesApp/local.properties
+
+# Android Studio / IntelliJ
+SuscripcionesApp/.idea/
+*.iml
+.DS_Store
+
+# Signing / secrets
+*.jks
+*.keystore
+keystore.properties
+
+# Build outputs
+*.apk
+*.aab
+
+# Logs
+*.log
