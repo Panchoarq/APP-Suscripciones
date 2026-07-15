@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -60,6 +61,7 @@ fun HomeScreen(
     onAddSubscription: (categoryId: Long) -> Unit,
     onEditCategory: (Long) -> Unit,
     onOpenSubscription: (Long) -> Unit,
+    onOpenOptions: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
     val expanded by viewModel.expandedCategoryIds.collectAsState()
@@ -90,6 +92,9 @@ fun HomeScreen(
                         contentDescription = "Cambiar tema",
                         tint = MaterialTheme.colorScheme.onSurface,
                     )
+                }
+                CircleIconButton(size = 40.dp, onClick = { onOpenOptions() }) {
+                    Icon(Icons.Filled.Settings, contentDescription = "Opciones", tint = MaterialTheme.colorScheme.onSurface)
                 }
             }
         }

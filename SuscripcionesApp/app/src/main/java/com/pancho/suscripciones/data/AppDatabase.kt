@@ -22,14 +22,15 @@ class Converters {
 }
 
 @Database(
-    entities = [CategoryEntity::class, SubscriptionEntity::class],
-    version = 2,
+    entities = [CategoryEntity::class, SubscriptionEntity::class, PaymentMethodEntity::class],
+    version = 3,
     exportSchema = false,
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun subscriptionDao(): SubscriptionDao
+    abstract fun paymentMethodDao(): PaymentMethodDao
 
     companion object {
         @Volatile private var instance: AppDatabase? = null

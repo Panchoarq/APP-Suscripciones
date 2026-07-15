@@ -12,6 +12,12 @@ data class CategoryEntity(
     val mono: String,
 )
 
+@Entity(tableName = "payment_methods")
+data class PaymentMethodEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val name: String,
+)
+
 enum class Currency { CLP, USD }
 enum class BillingCycle { MENSUAL, ANUAL }
 

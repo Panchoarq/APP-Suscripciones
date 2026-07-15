@@ -15,8 +15,15 @@ enum class VisualStyle { LISTA, MAQUINA_ESCRIBIR, SUAVE }
 class PreferencesRepository(private val context: Context) {
     private val darkThemeKey = booleanPreferencesKey("dark_theme")
     private val visualStyleKey = stringPreferencesKey("visual_style")
+    private val hasSeededDefaultsKey = booleanPreferencesKey("has_seeded_defaults")
 
     val isDarkTheme: Flow<Boolean> = context.dataStore.data.map { it[darkThemeKey] ?: true }
+
+    val hasSeededDefaults: Flow<Boolean> = context.dataStore.data.map { it[hasSeededDefaultsKey] ?: false }
+
+    suspend fun setHasSeededDefaults() {
+        context.dataStore.edit { it[hasSeededDefaultsKey] = true }
+    }
 
     val visualStyle: Flow<VisualStyle> = context.dataStore.data.map { prefs ->
         prefs[visualStyleKey]?.let { runCatching { VisualStyle.valueOf(it) }.getOrNull() }

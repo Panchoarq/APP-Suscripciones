@@ -34,3 +34,15 @@ interface SubscriptionDao {
     @Delete
     suspend fun delete(subscription: SubscriptionEntity)
 }
+
+@Dao
+interface PaymentMethodDao {
+    @Query("SELECT * FROM payment_methods ORDER BY name")
+    fun observeAll(): Flow<List<PaymentMethodEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(method: PaymentMethodEntity): Long
+
+    @Delete
+    suspend fun delete(method: PaymentMethodEntity)
+}

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.pancho.suscripciones.data.AppDatabase
 import com.pancho.suscripciones.data.CategoryEntity
 import com.pancho.suscripciones.data.Currency
+import com.pancho.suscripciones.data.PaymentMethodEntity
 import com.pancho.suscripciones.data.PreferencesRepository
 import com.pancho.suscripciones.data.SubscriptionEntity
 import com.pancho.suscripciones.data.SubscriptionsRepository
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -31,6 +33,7 @@ data class HomeUiState(
     val hasUsdSubscription: Boolean = false,
     val darkTheme: Boolean = true,
     val visualStyle: VisualStyle = VisualStyle.LISTA,
+    val paymentMethods: List<PaymentMethodEntity> = emptyList(),
 )
 
 fun SubscriptionEntity.monthlyEquivalentClp(): Double {
@@ -51,7 +54,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         repository.observeSubscriptions(),
         prefs.isDarkTheme,
         prefs.visualStyle,
-    ) { categories, subs, dark, style ->
+        repository.observePaymentMethods(),
+    ) { categories, subs, dark, style, paymentMethods ->
         val grouped = categories.map { cat ->
             CategoryWithSubs(
                 category = cat,
@@ -65,8 +69,18 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             hasUsdSubscription = subs.any { it.currency == Currency.USD },
             darkTheme = dark,
             visualStyle = style,
+            paymentMethods = paymentMethods,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), HomeUiState())
+
+    init {
+        viewModelScope.launch {
+            if (!prefs.hasSeededDefaults.first()) {
+                seedDefaultData(repository)
+                prefs.setHasSeededDefaults()
+            }
+        }
+    }
 
     fun toggleExpanded(categoryId: Long) {
         expandedIds.value = expandedIds.value.toMutableSet().apply {
@@ -101,5 +115,13 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun deleteSubscription(sub: SubscriptionEntity) = viewModelScope.launch {
         repository.deleteSubscription(sub)
+    }
+
+    fun savePaymentMethod(method: PaymentMethodEntity) = viewModelScope.launch {
+        repository.savePaymentMethod(method)
+    }
+
+    fun deletePaymentMethod(method: PaymentMethodEntity) = viewModelScope.launch {
+        repository.deletePaymentMethod(method)
     }
 }

@@ -18,10 +18,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,6 +34,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -54,10 +59,16 @@ import com.pancho.suscripciones.data.SubscriptionEntity
 import com.pancho.suscripciones.ui.AppViewModel
 import com.pancho.suscripciones.ui.findBrand
 import com.pancho.suscripciones.ui.monoForName
+import com.pancho.suscripciones.ui.theme.LocalExtraColors
 import com.pancho.suscripciones.ui.theme.LogoPalette
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubscriptionEditScreen(
     viewModel: AppViewModel,
@@ -81,9 +92,14 @@ fun SubscriptionEditScreen(
     var logoColor by remember { mutableStateOf(existing?.logoColorHex ?: "#5B8CFF") }
     var logoImagePath by remember { mutableStateOf(existing?.logoImagePath) }
     var isDownloadingLogo by remember { mutableStateOf(false) }
+    var nextChargeDate by remember {
+        mutableStateOf(existing?.nextChargeDateEpochDay ?: LocalDate.now().plusMonths(1).toEpochDay())
+    }
+    var showDatePicker by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val extra = LocalExtraColors.current
     val brand = remember(name) { findBrand(name) }
 
     // Al escribir el nombre de un servicio reconocido (solo en suscripciones nuevas), autocompleta
@@ -140,7 +156,67 @@ fun SubscriptionEditScreen(
         }
 
         OutlinedTextField(value = price, onValueChange = { price = it }, label = { Text("Precio") }, modifier = Modifier.fillMaxWidth().padding(top = 16.dp))
-        OutlinedTextField(value = paymentMethod, onValueChange = { paymentMethod = it }, label = { Text("Método de pago") }, modifier = Modifier.fillMaxWidth().padding(top = 16.dp))
+
+        Text(
+            "Fecha de cobro",
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.padding(top = 16.dp, bottom = 6.dp),
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(4.dp))
+                .clickable { showDatePicker = true }
+                .padding(horizontal = 16.dp, vertical = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                LocalDate.ofEpochDay(nextChargeDate).format(DateTimeFormatter.ofPattern("d MMMM yyyy", Locale("es"))),
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Icon(Icons.Filled.CalendarMonth, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface)
+        }
+
+        if (showDatePicker) {
+            val datePickerState = rememberDatePickerState(
+                initialSelectedDateMillis = LocalDate.ofEpochDay(nextChargeDate)
+                    .atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli(),
+            )
+            DatePickerDialog(
+                onDismissRequest = { showDatePicker = false },
+                confirmButton = {
+                    TextButton(onClick = {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            nextChargeDate = Instant.ofEpochMilli(millis).atZone(ZoneOffset.UTC).toLocalDate().toEpochDay()
+                        }
+                        showDatePicker = false
+                    }) { Text("Aceptar") }
+                },
+                dismissButton = { TextButton(onClick = { showDatePicker = false }) { Text("Cancelar") } },
+            ) { DatePicker(state = datePickerState) }
+        }
+
+        Text(
+            "Método de pago",
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.padding(top = 16.dp, bottom = 6.dp),
+        )
+        if (state.paymentMethods.isEmpty()) {
+            Text("Agrega medios de pago desde Opciones.", style = MaterialTheme.typography.labelMedium, color = extra.textMuted)
+        } else {
+            Row(
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                state.paymentMethods.forEach { pm ->
+                    FilterChip(selected = pm.name == paymentMethod, onClick = { paymentMethod = pm.name }, label = { Text(pm.name) })
+                }
+            }
+        }
+
         OutlinedTextField(value = website, onValueChange = { website = it }, label = { Text("Sitio web") }, modifier = Modifier.fillMaxWidth().padding(top = 16.dp))
         OutlinedTextField(value = username, onValueChange = { username = it }, label = { Text("Usuario") }, modifier = Modifier.fillMaxWidth().padding(top = 16.dp))
         OutlinedTextField(
@@ -249,7 +325,7 @@ fun SubscriptionEditScreen(
                     price = price.toDoubleOrNull() ?: 0.0,
                     currency = currency,
                     cycle = cycle,
-                    nextChargeDateEpochDay = existing?.nextChargeDateEpochDay ?: LocalDate.now().plusMonths(1).toEpochDay(),
+                    nextChargeDateEpochDay = nextChargeDate,
                     paymentMethod = paymentMethod,
                     website = website,
                     username = username,

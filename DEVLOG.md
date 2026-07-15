@@ -44,10 +44,20 @@ Funcionalidad agregada a pedido: reconocer y asignar automáticamente el logo/co
 3. Se agregó el campo `logoImagePath` a `SubscriptionEntity`, lo que subió la versión de esquema de Room de 1 a 2 (`fallbackToDestructiveMigration()`, aceptable en esta etapa sin usuarios reales — implica que los datos de prueba cargados antes de este cambio se pierden en el próximo build).
 4. Renderizado del logo descargado en Home y en Detalle de suscripción (con fallback a iniciales + color si no hay imagen).
 
+## Datos por defecto, fecha de cobro editable, medios de pago y respaldo
+
+- **Seed de datos por defecto**: al primer inicio (flag `hasSeededDefaults` en DataStore, para que no se repita si luego el usuario borra todo) se precargan 6 categorías (Cloud, Compras, Delivery, Streaming, Supermercado, Transporte) con 15 suscripciones comunes distribuidas entre ellas (OneDrive, Google Drive, Mercado Libre, Rappi Pro, Uber Eats Pro, Netflix, Amazon Prime, HBO Max, Disney+, Paramount+, Apple TV+, Spotify, Jumbo, Uber, Cabify), con precio en $0 como placeholder para que el usuario complete el valor real. Todo se puede eliminar libremente, igual que cualquier categoría/suscripción agregada a mano. Se agregó "Mercado Libre" a `BrandRegistry.kt` para que tome su color de marca automáticamente.
+- **Fecha de cobro editable**: el campo `nextChargeDateEpochDay` ya existía en el modelo pero no era editable desde la UI (quedaba fijo en "hoy + 1 mes" al crear). Se agregó un selector de fecha (`DatePickerDialog` de Material 3) en el formulario de suscripción.
+- **Medios de pago configurables**: nueva entidad `PaymentMethodEntity` (Room, versión de esquema 2→3) con lista editable desde la nueva pantalla de Opciones (agregar/eliminar). El campo de método de pago en el formulario de suscripción pasó de texto libre a selección por chips sobre esa lista. Se sembran 3 medios de pago genéricos por defecto (Tarjeta de crédito, Tarjeta de débito, Transferencia).
+- **Pantalla de Opciones** (`OptionsScreen.kt`, accesible desde un ícono de engranaje en Home): administración de medios de pago + sección de respaldo.
+- **Exportar/Importar respaldo a la nube**: `BackupManager.kt` serializa categorías, suscripciones y medios de pago a JSON (usando `org.json`, sin dependencias nuevas) y usa Storage Access Framework (`ActivityResultContracts.CreateDocument`/`OpenDocument`) para que el usuario elija dónde guardarlo/leerlo — incluyendo Google Drive u otros proveedores de documentos, sin integrar una API de nube específica. Decisiones de producto acordadas: las contraseñas se incluyen **en texto plano** dentro del JSON (la clave de cifrado del Android Keystore no sobrevive una reinstalación o cambio de equipo, así que sin esto el respaldo no sería restaurable — se advierte en la propia pantalla que el archivo debe guardarse en un lugar privado); al importar, los datos se **fusionan** con lo existente evitando duplicados por nombre (categoría, medio de pago, suscripción dentro de su categoría), en vez de reemplazar todo.
+- Bump de versión de esquema Room a 3 (sigue con `fallbackToDestructiveMigration()`, mismo criterio que el bump anterior).
+- Verificado con `gradlew compileDebugKotlin` y `gradlew assembleDebug`: build exitoso.
+
 ## Pendiente / próximos pasos
 
 - Implementar los modos visuales "Máquina de escribir" y "Suave" (theming alterno).
 - Reemplazar `FontFamily.Default` por las tipografías reales del diseño (Space Grotesk, Manrope) — instrucciones en `Type.kt`.
 - Conectar la tasa de cambio USD→CLP a `mindicador.cl` en vez del valor hardcodeado.
 - Firmar un APK/AAB de "release" si se decide publicar en Play Store (actualmente solo se generó un APK de debug para compartir directamente).
-- Considerar agregar exportación/importación de respaldo de datos (JSON) como red de seguridad ante reinstalación o cambio de celular, dado que la app es 100% local sin sync en la nube.
+- Completar precios reales de las suscripciones precargadas por defecto (quedan en $0 como placeholder).

@@ -31,6 +31,7 @@ private val brands: List<Pair<String, Brand>> = listOf(
     "uber eats" to Brand("#06C167", "ubereats.com"),
     "uber" to Brand("#000000", "uber.com"),
     "rappi" to Brand("#FF441F", "rappi.com"),
+    "mercado libre" to Brand("#FFE600", "mercadolibre.cl"),
     "pedidosya" to Brand("#FA0050", "pedidosya.cl"),
     "didi" to Brand("#FF7300", "didiglobal.com"),
     "cabify" to Brand("#6E31F7", "cabify.com"),

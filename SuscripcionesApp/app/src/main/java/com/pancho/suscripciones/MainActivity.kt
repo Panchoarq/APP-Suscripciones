@@ -37,6 +37,7 @@ class MainActivity : ComponentActivity() {
                             onAddSubscription = { categoryId -> navController.navigate("subscription_edit/$categoryId/-1") },
                             onEditCategory = { categoryId -> navController.navigate("category_edit?id=$categoryId") },
                             onOpenSubscription = { subId -> navController.navigate("subscription_detail/$subId") },
+                            onOpenOptions = { navController.navigate("options") },
                         )
                     }
                     composable(
@@ -76,6 +77,12 @@ class MainActivity : ComponentActivity() {
                             viewModel = viewModel,
                             categoryId = if (id == -1L) null else id,
                             onDone = { navController.popBackStack() },
+                        )
+                    }
+                    composable("options") {
+                        com.pancho.suscripciones.ui.options.OptionsScreen(
+                            viewModel = viewModel,
+                            onBack = { navController.popBackStack() },
                         )
                     }
                 }
